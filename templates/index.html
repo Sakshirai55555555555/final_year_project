@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gait Analysis</title>
+</head>
+<body>
+    <h1>Upload Your Video for Gait Analysis</h1>
+    <input type="file" id="videoFile">
+    <button onclick="uploadVideo()">Upload</button>
+    <div id="result"></div>
+
+    <script>
+        function uploadVideo() {
+            let fileInput = document.getElementById('videoFile');
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", file);
+
+            fetch("/upload", { method: "POST", body: formData })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

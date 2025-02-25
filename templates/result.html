@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Analysis Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Result</h1>
+
+        <!-- Display Uploaded Video -->
+        <div class="video-container">
+            <video controls>
+                <source src="{{ url_for('static', filename='uploads/' + filename) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Display Extracted Keypoints -->
+        <div class="result">
+            <h2>Extracted Keypoints:</h2>
+            <pre>{{ keypoints }}</pre>
+        </div>
+
+        <!-- Display Recommendations -->
+        <div class="result">
+            <h2>Recommendations:</h2>
+            <p>{{ recommendations }}</p>
+        </div>
+
+        <!-- Button to Upload Another Video -->
+        <a href="{{ url_for('index') }}" class="btn">Upload Another Video</a>
+    </div>
+</body>
+</html>
