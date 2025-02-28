@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from utils.process_video import process_video
+from utils.recommendations import recommend 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = "uploads"
@@ -23,12 +24,21 @@ def index():
             return jsonify({"error": "No selected file!"})
 
         if not allowed_file(file.filename):
-            return jsonify({"error": "Invalid file type! Only MP4, AVI, MOV are allowed."})
+            return jsonify({"error": "Invalid file type! Only MP4, AVI, MOV are     allowed."})
+    
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(filepath)
 
         result = process_video(filepath)
+
+        # Fetch the final prediction and generate recommendation
+        final_prediction = result.get("final_prediction", "Unknown")
+        recommendation_text = recommend(final_prediction)  # Get structured recommendation
+
+        # Add recommendation to the JSON response
+        result["recommendation"] = recommendation_text
+
         return jsonify(result)
 
     return render_template("index.html")

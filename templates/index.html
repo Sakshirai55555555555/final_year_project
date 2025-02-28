@@ -6,25 +6,53 @@
     <title>Gait Analysis</title>
 </head>
 <body>
+
     <h2>Upload Video for Gait Analysis</h2>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input type="file" name="video" accept="video/*">
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="videoInput" name="video" accept="video/*" required>
         <button type="submit">Upload & Analyze</button>
     </form>
-    <h3 id="result"></h3>
+
+    <h3 id="prediction">Waiting for result...</h3>
+    <h3>Recommendation:</h3>
+    <div id="recommendation" style="white-space: pre-line;"></div>
 
     <script>
-        document.querySelector("form").onsubmit = async (e) => {
-            e.preventDefault();
-            let formData = new FormData(e.target);
-            let response = await fetch("/", {
-                method: "POST",
-                body: formData
-            });
+        document.getElementById("uploadForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
 
-            let result = await response.json();
-            document.getElementById("result").innerText = "Final Prediction: " + result.final_prediction;
-        };
+            let formData = new FormData();
+            let videoFile = document.getElementById("videoInput").files[0];
+
+            if (!videoFile) {
+                alert("Please select a video file.");
+                return;
+            }
+
+            formData.append("video", videoFile);
+
+            try {
+                let response = await fetch("/", {
+                    method: "POST",
+                    body: formData
+                });
+
+                let result = await response.json();
+
+                if (result.error) {
+                    document.getElementById("prediction").innerText = "Error: " + result.error;
+                    document.getElementById("recommendation").innerText = "";
+                } else {
+                    document.getElementById("prediction").innerText = "Final Prediction: " + result.final_prediction;
+                    document.getElementById("recommendation").innerText = result.recommendation;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("prediction").innerText = "Error processing video.";
+                document.getElementById("recommendation").innerText = "";
+            }
+        });
     </script>
+
 </body>
 </html>
