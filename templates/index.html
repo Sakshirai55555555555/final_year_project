@@ -6,29 +6,25 @@
     <title>Gait Analysis</title>
 </head>
 <body>
-    <h1>Upload Your Video for Gait Analysis</h1>
-    <input type="file" id="videoFile">
-    <button onclick="uploadVideo()">Upload</button>
-    <div id="result"></div>
+    <h2>Upload Video for Gait Analysis</h2>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="video" accept="video/*">
+        <button type="submit">Upload & Analyze</button>
+    </form>
+    <h3 id="result"></h3>
 
     <script>
-        function uploadVideo() {
-            let fileInput = document.getElementById('videoFile');
-            let file = fileInput.files[0];
+        document.querySelector("form").onsubmit = async (e) => {
+            e.preventDefault();
+            let formData = new FormData(e.target);
+            let response = await fetch("/", {
+                method: "POST",
+                body: formData
+            });
 
-            if (!file) {
-                alert("Please select a file to upload.");
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append("file", file);
-
-            fetch("/upload", { method: "POST", body: formData })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error("Error:", error));
-        }
+            let result = await response.json();
+            document.getElementById("result").innerText = "Final Prediction: " + result.final_prediction;
+        };
     </script>
 </body>
 </html>

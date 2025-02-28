@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h2>Gait Analysis Results</h2>
+    
+    <h3>Uploaded Video</h3>
+    <video width="500" controls>
+        <source src="{{ url_for('static', filename='uploads/' + filename) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <h3>Analysis Summary</h3>
+    <p><strong>Predicted Condition:</strong> {{ result["final_prediction"] }}</p>
+
+    <h3>Class Distributions</h3>
+    <pre>{{ result["class_distributions"] | tojson(indent=2) }}</pre>
+
+    <h3>Recommended Actions</h3>
+    <p><strong>Explanation:</strong> {{ result["recommendations"]["explanation"] }}</p>
+    <ul>
+        {% for exercise in result["recommendations"]["exercises"] %}
+            <li><strong>{{ exercise["name"] }}</strong>: {{ exercise["description"] }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Advice:</strong> {{ result["recommendations"]["advice"] }}</p>
+
+    <a href="/">Upload Another Video</a>
+</body>
+</html>

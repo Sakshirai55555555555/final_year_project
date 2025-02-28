@@ -15,12 +15,6 @@ def recommend(gait_class):
                 {"name": "Calf Stretches", "description": "Improve flexibility with calf stretches."}
             ],
             "advice": "If pain persists, consult a physiotherapist."
-        },
-        "No Arm Swing": {
-            "abnormality": "No Arm Swing",
-            "explanation": "Lack of arm swing might be due to muscle stiffness or imbalance.",
-            "exercises": [{"name": "Arm Circles", "description": "Improve shoulder mobility with arm circles."}],
-            "advice": "Focus on a natural arm swing while walking."
         }
     }
 
